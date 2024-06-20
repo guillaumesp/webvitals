@@ -1,5 +1,5 @@
 import puppeteer, { Browser, Page } from "puppeteer-core";
-import lighthouse, {desktopConfig} from 'lighthouse';
+import lighthouse, { desktopConfig } from 'lighthouse';
 import fs from 'fs';
 
 type LighthouseResults = {
@@ -28,10 +28,11 @@ export class Program {
     });
 
 
-      const desktopPage = await this.getDesktopPage(browser);
-      var desktopTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', desktopPage);
-      console.log(desktopTest);
-
+    const desktopPage = await this.getDesktopPage(browser);
+    var desktopTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'desktop', desktopPage);
+    console.log(desktopTest);
+    var mobileTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'mobile', desktopPage);
+    console.log(mobileTest);
 
     await browser.close();
 
@@ -39,8 +40,8 @@ export class Program {
   }
 
 
-  private async lighthouseScanAsync(url: string, page: Page): Promise<LighthouseResults | undefined> {
-    const runnerResult = await lighthouse(url, undefined, desktopConfig, page);
+  private async lighthouseScanAsync(url: string, type: 'desktop' | 'mobile', page: Page): Promise<LighthouseResults | undefined> {
+    const runnerResult = await lighthouse(url, undefined, type === 'desktop' ? desktopConfig : undefined, page);
     if (runnerResult == null) {
       console.log('Lighthouse failed');
       return undefined;
