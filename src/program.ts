@@ -66,7 +66,7 @@ export class Program {
       throw new Error('Lighthouse failed');
     }
 
-    fs.writeFileSync(`./${type}.json`, JSON.stringify(runnerResult.lhr.audits));
+    //fs.writeFileSync(`./${type}.json`, JSON.stringify(runnerResult.lhr.audits));
     const rawResults = Object.values(runnerResult.lhr.categories);
     return <LighthouseResults>{
       performanceScore: this.toPercent(rawResults.find(c => c.id === 'performance')?.score),
