@@ -14,10 +14,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "lighthouse": "^12.1.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "jsdom": "^24.1.0",
     "puppeteer": "^22.11.2",
     "puppeteer-core": "^22.11.2"
   }
