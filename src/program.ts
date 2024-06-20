@@ -40,7 +40,21 @@ export class Program {
 
 
   private async lighthouseScanAsync(url: string, page: Page): Promise<LighthouseResults | undefined> {
-    const runnerResult = await lighthouse(url, undefined, undefined, page);
+    const runnerResult = await lighthouse(url, undefined, {
+      extends: 'lighthouse:default',
+      settings: {
+        onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'],
+        formFactor: 'desktop',
+        screenEmulation: {
+          "mobile": false,
+          "width": 1350,
+          "height": 940,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        },
+      },
+    
+    }, page);
     if (runnerResult == null) {
       console.log('Lighthouse failed');
       return undefined;
