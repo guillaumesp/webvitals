@@ -1,5 +1,5 @@
 import puppeteer, { Browser, Page } from "puppeteer-core";
-import lighthouse, { desktopConfig } from 'lighthouse';
+import lighthouse, { RunnerResult, desktopConfig } from 'lighthouse';
 import fs from 'fs';
 
 type PerformanceResults = {
@@ -32,17 +32,15 @@ export class Program {
   public async mainAsync() {
     const browser = await puppeteer.launch({
       headless: true,
-      defaultViewport: null,
+      //defaultViewport: null,
       ignoreDefaultArgs: ['--enable-automation'],
       executablePath: 'c:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
     });
 
 
-    const desktopPage = await this.getDesktopPage(browser);
-    const mobilePage = await this.getMobilePage(browser);
-    var desktopTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'desktop', desktopPage);
-    var mobileTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'mobile', mobilePage);
-    
+    var desktopTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'desktop', browser);
+    var mobileTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'mobile', browser);
+
     console.log(desktopTest);
     console.log(mobileTest);
 
@@ -52,11 +50,20 @@ export class Program {
   }
 
 
-  private async lighthouseScanAsync(url: string, type: 'desktop' | 'mobile', page: Page): Promise<LighthouseResults | undefined> {
-    const runnerResult = await lighthouse(url, undefined, type === 'desktop' ? desktopConfig : undefined, page);
+  private async lighthouseScanAsync(url: string, type: 'desktop' | 'mobile', browser: Browser): Promise<LighthouseResults | undefined> {
+    
+    let runnerResult : RunnerResult | undefined;
+    if(type === 'desktop') {
+      const desktopPage = await this.getDesktopPage(browser);
+      runnerResult = await lighthouse(url, undefined, desktopConfig, desktopPage);
+    } else if(type === 'mobile') {
+      const mobilePage = await this.getMobilePage(browser);
+      runnerResult = await lighthouse(url, undefined, undefined, mobilePage);
+    } else {
+      throw new Error('Invalid type');
+    }
     if (runnerResult == null) {
-      console.log('Lighthouse failed');
-      return undefined;
+      throw new Error('Lighthouse failed');
     }
 
     fs.writeFileSync(`./${type}.json`, JSON.stringify(runnerResult.lhr.audits));
