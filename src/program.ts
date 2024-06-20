@@ -1,5 +1,6 @@
 import puppeteer, { Browser, Page } from "puppeteer-core";
 import lighthouse from 'lighthouse';
+import fs from 'fs';
 
 type LighthouseResults = {
   performance: number;
@@ -7,6 +8,12 @@ type LighthouseResults = {
   bestPractices: number;
   seo: number;
   pwa: number;
+  firstContentfulPaint: string;
+  speedIndex: string;
+  largestContentfulPaint: string;
+  timeToInteractive: string;
+  totalBlockingTime: string;
+  cumulativeLayoutShift: string;
 };
 
 
@@ -46,6 +53,12 @@ export class Program {
       bestPractices: this.toPercent(rawResults.find(c => c.id === 'best-practices')?.score),
       seo: this.toPercent(rawResults.find(c => c.id === 'seo')?.score),
       pwa: this.toPercent(rawResults.find(c => c.id === 'pwa')?.score),
+      firstContentfulPaint: runnerResult.lhr.audits['first-contentful-paint'].displayValue,
+      speedIndex: runnerResult.lhr.audits['speed-index'].displayValue,
+      largestContentfulPaint: runnerResult.lhr.audits['largest-contentful-paint'].displayValue,
+      timeToInteractive: runnerResult.lhr.audits['interactive'].displayValue,
+      totalBlockingTime: runnerResult.lhr.audits['total-blocking-time'].displayValue,
+      cumulativeLayoutShift: runnerResult.lhr.audits['cumulative-layout-shift'].displayValue
     };
   }
 
