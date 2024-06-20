@@ -63,16 +63,16 @@ export class Program {
       performanceScore: this.toPercent(rawResults.find(c => c.id === 'performance')?.score),
       performance: {
         firstContentfulPaintDisplayValue: runnerResult.lhr.audits['first-contentful-paint'].displayValue,
-        speedIndexDisplayValue: runnerResult.lhr.audits['speed-index'].displayValue,
-        largestContentfulPaintDisplayValue: runnerResult.lhr.audits['largest-contentful-paint'].displayValue,
-        timeToInteractiveDisplayValue: runnerResult.lhr.audits['interactive'].displayValue,
-        totalBlockingTimeDisplayValue: runnerResult.lhr.audits['total-blocking-time'].displayValue,
-        cumulativeLayoutShiftDisplayValue: runnerResult.lhr.audits['cumulative-layout-shift'].displayValue,
         firstContentfulPaint: runnerResult.lhr.audits['first-contentful-paint'].numericValue,
+        speedIndexDisplayValue: runnerResult.lhr.audits['speed-index'].displayValue,
         speedIndex: runnerResult.lhr.audits['speed-index'].numericValue,
+        largestContentfulPaintDisplayValue: runnerResult.lhr.audits['largest-contentful-paint'].displayValue,
         largestContentfulPaint: runnerResult.lhr.audits['largest-contentful-paint'].numericValue,
+        timeToInteractiveDisplayValue: runnerResult.lhr.audits['interactive'].displayValue,
         timeToInteractive: runnerResult.lhr.audits['interactive'].numericValue,
+        totalBlockingTimeDisplayValue: runnerResult.lhr.audits['total-blocking-time'].displayValue,
         totalBlockingTime: runnerResult.lhr.audits['total-blocking-time'].numericValue,
+        cumulativeLayoutShiftDisplayValue: runnerResult.lhr.audits['cumulative-layout-shift'].displayValue,
         cumulativeLayoutShift: runnerResult.lhr.audits['cumulative-layout-shift'].numericValue,
 
       },
@@ -98,15 +98,15 @@ export class Program {
   }
 
   private async getDesktopPage(browser: Browser): Promise<Page> {
-    const desktopPage = await browser.newPage();
-    desktopPage.setViewport({ width: 1920, height: 1080 });
-    return desktopPage;
+    const page = await browser.newPage();
+    page.setViewport({ width: 1920, height: 1080 });
+    return page;
   };
 
   private async getMobilePage(browser: Browser): Promise<Page> {
-    const desktopPage = await browser.newPage();
-    desktopPage.setViewport({ width: 1080, height: 2400 });
-    return desktopPage;
+    const page = await browser.newPage();
+    page.setViewport({ width: 1080, height: 2400 });
+    return page;
   };
 
 }
