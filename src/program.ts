@@ -1,19 +1,28 @@
 import puppeteer, { Browser, Page } from "puppeteer-core";
 import lighthouse, { desktopConfig } from 'lighthouse';
-import fs from 'fs';
+
+type PerformanceResults = {
+  firstContentfulPaintDisplayValue: string;
+  speedIndexDisplayValue: string;
+  largestContentfulPaintDisplayValue: string;
+  timeToInteractiveDisplayValue: string;
+  totalBlockingTimeDisplayValue: string;
+  cumulativeLayoutShiftDisplayValue: string;
+  firstContentfulPaint: number;
+  speedIndex: number;
+  largestContentfulPaint: number;
+  timeToInteractive: number;
+  totalBlockingTime: number;
+  cumulativeLayoutShift: number;
+}
 
 type LighthouseResults = {
-  performance: number;
-  accessibility: number;
-  bestPractices: number;
-  seo: number;
-  pwa: number;
-  firstContentfulPaint: string;
-  speedIndex: string;
-  largestContentfulPaint: string;
-  timeToInteractive: string;
-  totalBlockingTime: string;
-  cumulativeLayoutShift: string;
+  performanceScore: number;
+  performance : PerformanceResults;
+  accessibilityScore: number;
+  bestPracticesScore: number;
+  seoScore: number;
+  pwaScore: number;
 };
 
 
@@ -29,9 +38,11 @@ export class Program {
 
 
     const desktopPage = await this.getDesktopPage(browser);
+    const mobilePage = await this.getMobilePage(browser);
     var desktopTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'desktop', desktopPage);
+    var mobileTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'mobile', mobilePage);
+    
     console.log(desktopTest);
-    var mobileTest = await this.lighthouseScanAsync('https://www.euro4x4parts.com', 'mobile', desktopPage);
     console.log(mobileTest);
 
     await browser.close();
@@ -49,17 +60,27 @@ export class Program {
 
     const rawResults = Object.values(runnerResult.lhr.categories);
     return <LighthouseResults>{
-      performance: this.toPercent(rawResults.find(c => c.id === 'performance')?.score),
-      accessibility: this.toPercent(rawResults.find(c => c.id === 'accessibility')?.score),
-      bestPractices: this.toPercent(rawResults.find(c => c.id === 'best-practices')?.score),
-      seo: this.toPercent(rawResults.find(c => c.id === 'seo')?.score),
-      pwa: this.toPercent(rawResults.find(c => c.id === 'pwa')?.score),
-      firstContentfulPaint: runnerResult.lhr.audits['first-contentful-paint'].displayValue,
-      speedIndex: runnerResult.lhr.audits['speed-index'].displayValue,
-      largestContentfulPaint: runnerResult.lhr.audits['largest-contentful-paint'].displayValue,
-      timeToInteractive: runnerResult.lhr.audits['interactive'].displayValue,
-      totalBlockingTime: runnerResult.lhr.audits['total-blocking-time'].displayValue,
-      cumulativeLayoutShift: runnerResult.lhr.audits['cumulative-layout-shift'].displayValue
+      performanceScore: this.toPercent(rawResults.find(c => c.id === 'performance')?.score),
+      performance: {
+        firstContentfulPaintDisplayValue: runnerResult.lhr.audits['first-contentful-paint'].displayValue,
+        speedIndexDisplayValue: runnerResult.lhr.audits['speed-index'].displayValue,
+        largestContentfulPaintDisplayValue: runnerResult.lhr.audits['largest-contentful-paint'].displayValue,
+        timeToInteractiveDisplayValue: runnerResult.lhr.audits['interactive'].displayValue,
+        totalBlockingTimeDisplayValue: runnerResult.lhr.audits['total-blocking-time'].displayValue,
+        cumulativeLayoutShiftDisplayValue: runnerResult.lhr.audits['cumulative-layout-shift'].displayValue,
+        firstContentfulPaint: runnerResult.lhr.audits['first-contentful-paint'].numericValue,
+        speedIndex: runnerResult.lhr.audits['speed-index'].numericValue,
+        largestContentfulPaint: runnerResult.lhr.audits['largest-contentful-paint'].numericValue,
+        timeToInteractive: runnerResult.lhr.audits['interactive'].numericValue,
+        totalBlockingTime: runnerResult.lhr.audits['total-blocking-time'].numericValue,
+        cumulativeLayoutShift: runnerResult.lhr.audits['cumulative-layout-shift'].numericValue,
+
+      },
+      accessibilityScore: this.toPercent(rawResults.find(c => c.id === 'accessibility')?.score),
+      bestPracticesScore: this.toPercent(rawResults.find(c => c.id === 'best-practices')?.score),
+      seoScore: this.toPercent(rawResults.find(c => c.id === 'seo')?.score),
+      pwaScore: this.toPercent(rawResults.find(c => c.id === 'pwa')?.score),
+     
     };
   }
 
