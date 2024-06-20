@@ -1,5 +1,6 @@
 import puppeteer, { Browser, Page } from "puppeteer-core";
 import lighthouse, { desktopConfig } from 'lighthouse';
+import fs from 'fs';
 
 type PerformanceResults = {
   firstContentfulPaintDisplayValue: string;
@@ -58,6 +59,7 @@ export class Program {
       return undefined;
     }
 
+    fs.writeFileSync(`./${type}.json`, JSON.stringify(runnerResult.lhr.audits));
     const rawResults = Object.values(runnerResult.lhr.categories);
     return <LighthouseResults>{
       performanceScore: this.toPercent(rawResults.find(c => c.id === 'performance')?.score),
