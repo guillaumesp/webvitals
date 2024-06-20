@@ -46,11 +46,11 @@ export class Program {
         onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'],
         formFactor: 'desktop',
         screenEmulation: {
-          "mobile": false,
-          "width": 1350,
-          "height": 940,
-          "deviceScaleFactor": 1,
-          "disabled": false
+          mobile: false,
+          width: 1350,
+          height: 940,
+          deviceScaleFactor: 1,
+          disabled: false
         },
       },
     
