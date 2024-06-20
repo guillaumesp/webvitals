@@ -54,10 +54,10 @@ export class Program {
     
     let runnerResult : RunnerResult | undefined;
     if(type === 'desktop') {
-      const desktopPage = await this.getDesktopPage(browser);
+      const desktopPage = await this.getPage(type, browser);
       runnerResult = await lighthouse(url, undefined, desktopConfig, desktopPage);
     } else if(type === 'mobile') {
-      const mobilePage = await this.getMobilePage(browser);
+      const mobilePage = await this.getPage(type, browser);
       runnerResult = await lighthouse(url, undefined, undefined, mobilePage);
     } else {
       throw new Error('Invalid type');
@@ -106,15 +106,15 @@ export class Program {
     await page.screenshot({ path: filename });
   }
 
-  private async getDesktopPage(browser: Browser): Promise<Page> {
+  private async getPage(type : 'desktop'|'mobile', browser: Browser): Promise<Page> {
     const page = await browser.newPage();
-    page.setViewport({ width: 1920, height: 1080 });
-    return page;
-  };
-
-  private async getMobilePage(browser: Browser): Promise<Page> {
-    const page = await browser.newPage();
-    page.setViewport({ width: 1080, height: 2400 });
+    if(type === 'desktop') {
+      page.setViewport({ width: 1920, height: 1080 });
+    } else if(type === 'mobile') {
+      page.setViewport({ width: 1080, height: 2400 });
+    } else {
+      throw new Error('Invalid type');
+    }
     return page;
   };
 
