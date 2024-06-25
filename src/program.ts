@@ -17,20 +17,18 @@ export type TestResult = {
 
 export class Program {
 
-  public async mainAsync() {
+  public async reportAsync(url: string): Promise<TestResult> {
     const browser = await puppeteer.launch({
       headless: true,
       //defaultViewport: null,
       ignoreDefaultArgs: ['--enable-automation'],
-      //executablePath: 'c:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
+      executablePath: 'c:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
     });
 
-
-    const result = await this.TestUrl(browser, 'https://www.euro4x4parts.com');
-    console.log(result);
+    const result = await this.TestUrl(browser, url);
 
     await browser.close();
-
+    return result;
 
   }
 
