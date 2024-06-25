@@ -1,5 +1,5 @@
 import lighthouse, { RunnerResult, desktopConfig } from "lighthouse";
-import { Browser } from "puppeteer-core";
+import { Browser } from "puppeteer";
 import { BrowserUtils } from "./BrowserUtils.js";
 
 export type PerformanceResults = {

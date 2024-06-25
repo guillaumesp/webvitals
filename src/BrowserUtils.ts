@@ -1,4 +1,4 @@
-import { Browser, Page } from "puppeteer-core";
+import { Browser, Page } from "puppeteer";
 
 export class BrowserUtils {
     public static async getPage(type : 'desktop'|'mobile', browser: Browser): Promise<Page> {

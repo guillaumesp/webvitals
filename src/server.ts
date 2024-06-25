@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page } from "puppeteer-core";
+import puppeteer, { Browser, Page } from "puppeteer";
 import { Program } from "./program.js";
 
 

@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page } from "puppeteer-core";
+import puppeteer, { Browser, Page } from "puppeteer";
 import { LightHouseScan, LighthouseResults } from "./LightHouseScan.js";
 import { DocumentOutlineIssueDetector, DocumentOutlineIssueDetectorResult } from "./DocumentOutlineIssueDetector.js";
 import { BrowserUtils } from "./BrowserUtils.js";
@@ -22,7 +22,7 @@ export class Program {
       headless: true,
       //defaultViewport: null,
       ignoreDefaultArgs: ['--enable-automation'],
-      executablePath: 'c:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
+      //executablePath: 'c:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
     });
 
 
